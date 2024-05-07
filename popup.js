@@ -11,15 +11,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 async function toggleTabsInGroup(groupId, groupDiv) {
-  if (
-    !groupDiv.nextElementSibling ||
-    groupDiv.nextElementSibling.tagName !== "UL"
-  ) {
+  const group = await chrome.tabGroups.get(groupId);
+  chrome.tabGroups.update(groupId, { collapsed: !group.collapsed });
+
+  let ul = groupDiv.nextElementSibling;
+  if (!ul || ul.tagName !== "UL") {
     let tabs = await chrome.tabs.query({ groupId: groupId });
-    let ul = document.createElement("ul");
+    ul = document.createElement("ul");
     tabs.forEach((tab) => {
       let li = document.createElement("li");
       li.textContent = tab.title;
+
+      li.addEventListener("click", () => {
+        console.log("Clicked tab ID:", tab.id);
+
+        chrome.tabs.update(tab.id, { active: true }, (updatedTab) => {
+          if (updatedTab) {
+            console.log("Tab successfully activated:", updatedTab.id);
+          } else {
+            console.error("Error activating tab:", chrome.runtime.lastError);
+          }
+        });
+      });
+
       ul.appendChild(li);
     });
     if (groupDiv.nextElementSibling) {
@@ -28,6 +42,8 @@ async function toggleTabsInGroup(groupId, groupDiv) {
       groupDiv.parentNode.appendChild(ul);
     }
   } else {
-    groupDiv.nextElementSibling.remove();
+    ul.remove();
   }
+
+  groupDiv.classList.toggle("collapsed", group.collapsed);
 }

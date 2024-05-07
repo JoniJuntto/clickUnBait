@@ -3,7 +3,6 @@ function getDomainFromUrl(url) {
     return null;
   }
   const hostname = new URL(url).hostname;
-  // Return the full hostname to include subdomains
   return hostname;
 }
 
@@ -54,7 +53,6 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
       let existingGroup = groups.find((group) => group.title === newDomain);
 
       if (existingGroup) {
-        // Move tab to the existing group if it changed domains
         chrome.tabs.group({ groupId: existingGroup.id, tabIds: tabId });
       } else {
         chrome.tabs.group(
@@ -63,6 +61,7 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
             chrome.tabGroups.update(groupId, {
               title: newDomain,
               color: getRandomColor(),
+              collapsed: true,
             });
           }
         );
