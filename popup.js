@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   let container = document.getElementById("groups");
   groups.forEach((group) => {
     let groupDiv = document.createElement("div");
-    groupDiv.textContent = group.title;
+    groupDiv.textContent = group.title ? group.title : "Ungrouped";
     groupDiv.style.cursor = "pointer";
     groupDiv.onclick = () => toggleTabsInGroup(group.id, groupDiv);
     container.appendChild(groupDiv);

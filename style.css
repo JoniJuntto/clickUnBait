@@ -1,45 +1,46 @@
-/* Overall background and text color */
+
 body {
-  background-color: #121212; /* Dark grey background */
-  color: white; /* White text for contrast */
-  font-family: Arial, sans-serif; /* Modern and clean font */
+  background-color: #121212;
+  color: white; 
+  font-family: Arial, sans-serif;
 }
 
-/* Styling for the group divs */
+
 #groups div {
   cursor: pointer;
   padding: 10px;
-  border-bottom: 1px solid #333; /* Slightly lighter line for separation */
+  border-bottom: 1px solid #333;
+  font-weight: bold;
 }
 
-/* Hover effect for interactive elements */
 #groups div:hover {
-  background-color: #1e1e1e; /* Darker background on hover */
+  background-color: #252525;
 }
 
-/* Style for the list of tabs */
 ul {
-  list-style: none; /* Remove default list styling */
+  list-style: none;
   padding: 0;
   margin: 0;
 }
 
 li {
   padding: 8px 10px;
-  border-bottom: 1px solid #333; /* Consistent with div styling */
-  cursor: pointer; /* Indicates that the item is clickable */
+  border-bottom: 1px solid #333;
+  cursor: pointer;
+}
+
+li:hover {
+  background-color: turquoise;
 }
 
 li:last-child {
-  border-bottom: none; /* No border at the bottom of the last item */
+  border-bottom: none;
 }
 
-/* Toggle state styling */
 .collapsed {
-  background-color: #2a2a2a; /* Slightly different background for collapsed state */
+  background-color: #2a2a2a;
 }
 
-/* Additional hover effects for list items */
 li:hover {
-  background-color: #252525; /* Darker grey for hover on list items */
+  background-color: #252525;
 }
