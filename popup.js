@@ -1,49 +1,19 @@
-document.addEventListener("DOMContentLoaded", async () => {
-  let groups = await chrome.tabGroups.query({});
-  let container = document.getElementById("groups");
-  groups.forEach((group) => {
-    let groupDiv = document.createElement("div");
-    groupDiv.textContent = group.title ? group.title : "Ungrouped";
-    groupDiv.style.cursor = "pointer";
-    groupDiv.onclick = () => toggleTabsInGroup(group.id, groupDiv);
-    container.appendChild(groupDiv);
+document.addEventListener("DOMContentLoaded", () => {
+  const apiKeyInput = document.getElementById("api_key");
+  const saveKeyButton = document.getElementById("save_key");
+
+  // Load API key from storage on popup open
+  chrome.storage.sync.get("openai_api_key", (data) => {
+    if (data.openai_api_key) {
+      apiKeyInput.value = data.openai_api_key;
+    }
+  });
+
+  saveKeyButton.addEventListener("click", () => {
+    const apiKey = apiKeyInput.value;
+    chrome.storage.sync.set({ openai_api_key: apiKey }, () => {
+      console.log("API key saved");
+      alert("API key saved!");
+    });
   });
 });
-
-async function toggleTabsInGroup(groupId, groupDiv) {
-  const group = await chrome.tabGroups.get(groupId);
-  chrome.tabGroups.update(groupId, { collapsed: !group.collapsed });
-
-  let ul = groupDiv.nextElementSibling;
-  if (!ul || ul.tagName !== "UL") {
-    let tabs = await chrome.tabs.query({ groupId: groupId });
-    ul = document.createElement("ul");
-    tabs.forEach((tab) => {
-      let li = document.createElement("li");
-      li.textContent = tab.title;
-
-      li.addEventListener("click", () => {
-        console.log("Clicked tab ID:", tab.id);
-
-        chrome.tabs.update(tab.id, { active: true }, (updatedTab) => {
-          if (updatedTab) {
-            console.log("Tab successfully activated:", updatedTab.id);
-          } else {
-            console.error("Error activating tab:", chrome.runtime.lastError);
-          }
-        });
-      });
-
-      ul.appendChild(li);
-    });
-    if (groupDiv.nextElementSibling) {
-      groupDiv.parentNode.insertBefore(ul, groupDiv.nextElementSibling);
-    } else {
-      groupDiv.parentNode.appendChild(ul);
-    }
-  } else {
-    ul.remove();
-  }
-
-  groupDiv.classList.toggle("collapsed", group.collapsed);
-}
